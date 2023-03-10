@@ -4,6 +4,8 @@ api_keys.py
 ## Ignore Jupyter Notebooks
 *.ipynb
 
+# Ignore created .csv data
+*.csv
 
 
 # Byte-compiled / optimized / DLL files
