@@ -1,6 +1,9 @@
 # API Keys
 api_keys.py
 
+## Ignore Jupyter Notebooks
+*.ipynb
+
 
 
 # Byte-compiled / optimized / DLL files
