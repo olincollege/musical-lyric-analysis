@@ -26,10 +26,17 @@ def find_album(name, genius_object):
             album. If no album is found that matches the keyword criteria, -1
             is returned (as a string).
     """
+    # Use the genius object from lyricsgenius to search Genius for an album of
+    # the given musical's name. This returns 5 results in a dictionary in 
+    # JSON-format.
     album_dict = genius_object.search_albums(name)
 
+    # Remove unnecessary JSON nesting sections for the returned results.
     album_dict = album_dict["sections"][0]["hits"]
 
+    # Search each of the result albums for one that contains the defined 
+    # keywords in either the title or artist name. If one is found, it is
+    # immediately returned and the rest of the results are ignored.
     for album in album_dict:
         album_title = album["result"]["full_title"]
         album_artist = album["result"]["artist"]["name"]
@@ -37,6 +44,9 @@ def find_album(name, genius_object):
             if (keyword in album_title) or (keyword in album_artist):
                 return album["result"]["id"]
     
+    # If no albums with the requested keywords are found, the musical should be
+    # ignored in the data as there is no match on Genius. -1 is returned to
+    # signify this.
     return "-1"
         
 
