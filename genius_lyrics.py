@@ -26,6 +26,23 @@ def find_album(name, genius_object):
             album. If no album is found that matches the keyword criteria, -1
             is returned (as a string).
     """
+
+    # Some musicals have years in the name that causes issues with Genius
+    # results. If the name contains such a year (either in the format 'YY or
+    # YYYY at the end of the name), it is removed before the search takes place.
+    # 
+    # This is placed inside a try block to prevent musicals with names
+    # shorter than 4 characters from causing an error. If such an error is
+    # thrown, the name can't contain a year and the program will continue
+    # unchanged.
+    try:
+        if name[-3] == "'":
+            name = name[0:(len(name) - 4)]
+        elif name[(len(name) - 4):len(name)].isnumeric():
+            name = name[0:(len(name) - 5)]
+    except IndexError:
+        pass
+
     # Use the genius object from lyricsgenius to search Genius for an album of
     # the given musical's name. This returns 5 results in a dictionary in 
     # JSON-format.
