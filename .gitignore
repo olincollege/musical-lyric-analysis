@@ -7,6 +7,9 @@ api_keys.py
 # Ignore created .csv data
 *.csv
 
+# VS code settings
+/.vscode
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
