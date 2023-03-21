@@ -10,7 +10,9 @@ PROCESSED_FILE_PATH = "processed_broadway_data.csv"
 SUMMED_FILE_PATH = "summed_broadway_data.csv"
 
 
-def get_broadway_data(data_download_url=BROADWAY_DATA_URL, filepath=PROCESSED_FILE_PATH):
+def get_broadway_data(
+    data_download_url=BROADWAY_DATA_URL, filepath=PROCESSED_FILE_PATH
+):
     """
     Download Broadway data from the CORGIS database and filter it.
 
@@ -23,7 +25,7 @@ def get_broadway_data(data_download_url=BROADWAY_DATA_URL, filepath=PROCESSED_FI
         data_download_url: string that represents a URL to download a CSV file
             representing broadway data. This defaults to the URL to the CORGIS
             Broadway dataset. Alternatively, a different URL can be provided.
-        filepath: string representing the filepath to save the resultant csv 
+        filepath: string representing the filepath to save the resultant csv
             file to in relation to the project directory. Defaults to a standard
             value, processed_broadway_data.csv
     Returns:
@@ -60,12 +62,13 @@ def get_broadway_data(data_download_url=BROADWAY_DATA_URL, filepath=PROCESSED_FI
     # the dataframe indexes do not automatically get reset so that they count up
     # as it included gaps where the removed data was. Resetting indexes
     # renumbers each row to count up form 0.
-    broadway_musicals= broadway_musicals.reset_index(drop=True)
+    broadway_musicals = broadway_musicals.reset_index(drop=True)
 
     # The new data is written to a CSV file in the project directory. Specifying
     # that index=False ensures that the column titles are assigned correctly
-    # and numerical indexes are not redundantly included within the data.    
+    # and numerical indexes are not redundantly included within the data.
     broadway_musicals.to_csv(filepath, encoding="utf-8", index=False)
+
 
 def sum_data(load_filepath=PROCESSED_FILE_PATH, save_filepath=SUMMED_FILE_PATH):
     """
@@ -88,20 +91,20 @@ def sum_data(load_filepath=PROCESSED_FILE_PATH, save_filepath=SUMMED_FILE_PATH):
     # filename is not found, the function to download it is automatically called
     # with the given file name.
     try:
-        with open(load_filepath, 'r', encoding="utf-8") as file:
+        with open(load_filepath, "r", encoding="utf-8") as file:
             processed_dataframe = pd.read_csv(file)
     except FileNotFoundError:
         get_broadway_data(filepath=load_filepath)
-        with open(load_filepath, 'r', encoding="utf-8") as file:
+        with open(load_filepath, "r", encoding="utf-8") as file:
             processed_dataframe = pd.read_csv(file)
-    
+
     # A numpy array of all unique show names is pulled from the processed data
     # and saved to a list for easier looping.
     all_musicals = processed_dataframe["Show.Name"].unique().tolist()
 
-    # Each musical is added in order of the list to a new pandas dataframe to 
+    # Each musical is added in order of the list to a new pandas dataframe to
     # store only the total information for each musical.
-    summed_dataframe = pd.DataFrame({"ShowName" : all_musicals})
+    summed_dataframe = pd.DataFrame({"ShowName": all_musicals})
 
     # Blank lists are created prior to the following loop to collect the total
     # information from each musical. By looping through the list of musicals
@@ -112,27 +115,24 @@ def sum_data(load_filepath=PROCESSED_FILE_PATH, save_filepath=SUMMED_FILE_PATH):
     all_musicals_num_performances = []
 
     # each unique musical is looped through, where all performances of that
-    # musical are pulled out of the complete dataframe and then the total 
+    # musical are pulled out of the complete dataframe and then the total
     # attendance and number of performances are summed together. These are added
     # to the prior created lists in the same order as the musicals.
     for musical in all_musicals:
-        all_performances_of_musical = processed_dataframe[processed_dataframe["Show.Name"] == musical]
+        all_performances_of_musical = processed_dataframe[
+            processed_dataframe["Show.Name"] == musical
+        ]
 
         attendance = all_performances_of_musical["Statistics.Attendance"].sum()
         all_musicals_attendance.append(attendance)
 
         num_performances = all_performances_of_musical["Statistics.Performances"].sum()
         all_musicals_num_performances.append(num_performances)
-    
+
     # Each list is then added as a new column of the newly created dataframe.
     summed_dataframe["Attendance"] = all_musicals_attendance
     summed_dataframe["NumPerformances"] = all_musicals_num_performances
-    
+
     # Finally, this data is again written to a separate csv file in the project
     # directory.
     summed_dataframe.to_csv(save_filepath, encoding="utf-8", index=False)
-
-    
-
-    
-
