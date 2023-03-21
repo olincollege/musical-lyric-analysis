@@ -27,9 +27,11 @@ def find_album(name):
     Args:
         name: string representing the name of the musical to be searched for.
     Returns:
-        String consisting of a numeric album ID for the correctly identified
-            album. If no album is found that matches the keyword criteria, -1
-            is returned (as a string).
+        A tuple containing:
+            String consisting of a numeric album ID for the correctly identified
+                album. If no album is found that matches the keyword criteria,
+                -1is returned (as a string).
+            String consisting of the name of the album found to be matching.
     """
 
     genius_object = lg.Genius(key.CLIENT_ACCESS_TOKEN)
@@ -66,7 +68,7 @@ def find_album(name):
         album_artist = album["result"]["artist"]["name"]
         for keyword in LIST_OF_ALBUM_KEYWORDS:
             if (keyword in album_title) or (keyword in album_artist):
-                return album["result"]["id"]
+                return (album["result"]["id"], album["result"]["full_title"])
 
     # If no albums with the requested keywords are found, the musical should be
     # ignored in the data as there is no match on Genius. -1 is returned to
