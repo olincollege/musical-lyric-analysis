@@ -185,7 +185,7 @@ def write_lyrics_to_file(album_id):
 
     filepath = f"lyrics/{album_id}.csv"
 
-    with open(filepath, "w") as file:
+    with open(filepath, "w", encoding="utf-8") as file:
         csv_writer = csv.writer(file)
         csv_writer.writerows(lyrics)
 
@@ -209,21 +209,20 @@ def get_all_lyrics(album_id):
 
     lyrics = []
     try:
-        with open(file_path, 'r', encoding="utf-8") as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             # Use CSV library to open CSV; create list of lists in the format
             # that we are looking for.
             csv_reader = csv.reader(file)
             lyrics = list(csv_reader)
     except FileNotFoundError:
         write_lyrics_to_file(album_id)
-        with open(file_path, 'r', encoding="utf-8") as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             # Use CSV library to open CSV; create list of lists in the format
             # that we are looking for.
             csv_reader = csv.reader(file)
             lyrics = list(csv_reader)
 
-    
-    return(lyrics)
+    return lyrics
 
 
 def calculate_lyrical_uniqueness(lyrics):
