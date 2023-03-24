@@ -76,9 +76,7 @@ def find_album(name):
     # If no albums with the requested keywords are found, the musical should be
     # ignored in the data as there is no match on Genius. -1 is returned to
     # signify this.
-    return "-1"
-
-    # current_album_tracks = genius_object.album_tracks(album["result"]["id"])
+    return ("-1", "Not Found")
 
 
 def download_all_lyrics(album_id):
