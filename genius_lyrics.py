@@ -48,7 +48,7 @@ def find_album(name):
     try:
         if name[-3] == "'":
             name = name[0 : (len(name) - 4)]
-        elif name[len(name) - 2 : len(name)].isnumeric():
+        elif name[(len(name)) - 2 : len(name)].isnumeric():
             name = name[0 : (len(name) - 3)]
         elif name[(len(name) - 4) : len(name)].isnumeric():
             name = name[0 : (len(name) - 5)]
