@@ -9,6 +9,7 @@ api_keys.py
 
 # VS code settings
 /.vscode
+pyproject.toml
 
 
 # Byte-compiled / optimized / DLL files

@@ -39,8 +39,12 @@ def get_broadway_data(
 
     # remove any show that is not a musical (outside the scope of this project),
     # and remove any show before 1995, as data before this time is incomplete.
-    broadway_musicals = broadway_dataframe[broadway_dataframe["Show.Type"] == "Musical"]
-    broadway_musicals = broadway_musicals[broadway_musicals["Date.Year"] >= 1995]
+    broadway_musicals = broadway_dataframe[
+        broadway_dataframe["Show.Type"] == "Musical"
+    ]
+    broadway_musicals = broadway_musicals[
+        broadway_musicals["Date.Year"] >= 1995
+    ]
 
     # define a list of columns that is included in the original CORGIS dataset
     # that are not useful to our project and thus can be dropped. Drop each
@@ -126,7 +130,9 @@ def sum_data(load_filepath=PROCESSED_FILE_PATH, save_filepath=SUMMED_FILE_PATH):
         attendance = all_performances_of_musical["Statistics.Attendance"].sum()
         all_musicals_attendance.append(attendance)
 
-        num_performances = all_performances_of_musical["Statistics.Performances"].sum()
+        num_performances = all_performances_of_musical[
+            "Statistics.Performances"
+        ].sum()
         all_musicals_num_performances.append(num_performances)
 
     # Each list is then added as a new column of the newly created dataframe.

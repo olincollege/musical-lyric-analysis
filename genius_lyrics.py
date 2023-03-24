@@ -111,7 +111,6 @@ def download_all_lyrics(album_id):
     # Loop through each song in the album to find lyrics and add to the list of
     # all lyrics.
     for song in all_tracks:
-
         # The Genius API indicates if a song is all instrumentals, and will
         # throw an error if the lyrics of such a song are requested. If an
         # instrumental song is reached, it is ignored and the loop continues to
@@ -133,7 +132,9 @@ def download_all_lyrics(album_id):
         # This line replaces all punctuation marks in the string with empty
         # space so that words are not marked as unique just because they have
         # punctuation marks in them.
-        song_lyrics = song_lyrics.translate(str.maketrans("", "", PUNCTUATION_MARKS))
+        song_lyrics = song_lyrics.translate(
+            str.maketrans("", "", PUNCTUATION_MARKS)
+        )
 
         # The single string containing all lyrics in the song is split into a
         # list. Without another parameter, the split function will by default
@@ -155,7 +156,9 @@ def download_all_lyrics(album_id):
         # consistently contain extra garbage with the first and second word.
         # To alleviate this, the only way to reliably handle this is to
         # remove these words completely.
-        song_lyrics_filtered = song_lyrics_filtered[1 : len(song_lyrics_filtered) - 1]
+        song_lyrics_filtered = song_lyrics_filtered[
+            1 : len(song_lyrics_filtered) - 1
+        ]
 
         # Each list is appended to the master list for all songs in the album.
         album_lyrics.append(song_lyrics_filtered)
