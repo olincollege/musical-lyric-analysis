@@ -30,7 +30,7 @@ def find_album(name):
         A tuple containing:
             String consisting of a numeric album ID for the correctly identified
                 album. If no album is found that matches the keyword criteria,
-                -1is returned (as a string).
+                -1 is returned (as a string).
             String consisting of the name of the album found to be matching.
     """
 
