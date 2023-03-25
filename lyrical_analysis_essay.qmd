@@ -1,0 +1,21 @@
+---
+jupyter: python3
+---
+
+## Analyzing the Impact of a Musical's Lyrics on Broadway Performance
+##### Carter Harris & Elin O'Neill - Olin College of Engineering
+
+
+### Introduction
+While countless elements are required to make a great musical - a compelling story, likeable (or dislikeable) characters, and the way the set and the actors come together, the music and lyrics are what seperates the good from the bad when it comes to musicals - music is in the name, after all. But what exactly is it about shows' music and lyrics that sets them apart from the others? While some shows and composers are all about a catchy beat, others are known for thier wordcraft and vocabulary, and this project aims to explore this latter and it's influence on a show's performance. In this project, we set out to analyze and determine whether the uniqueness & complexity of a musical's lyrics had an influence on the show's attendance on Broadway, a district in New York City that is the home of theater in the United States.
+
+### Methodology
+Before we get into the nitty-gritty of data sources and hundreds of lyrics, what exactly "lyrical uniquness" is must be definied. For this project, a song's lyrical uniqueness is defined as the percentage of unique words that make up the lyrics (number of unique words in the song divided by total words in the song). For each musical, an average is taken of each song's uniqueness to determine the musical's overall uniqueness
+
+#### Data Sources
+
+**CORGIS Broadway Data**
+
+The [CORGIS (Collection of Really Great, Intersting, Situated Datasets) Project](https://corgis-edu.github.io/corgis/) is a collection of various datasets that contain interesting statistics of everything from flight delays to smoking trends to reported UFO sightings. However, of our interest, the CORGIS project has a dataset consisting of various data about shows on Broadway. This dataset, including data from the mid 1990s up until 2016, contains every show that was on Broadway, it's attendance, the number of shows performed, and various other data on a week-by-week basis. 
+
+
