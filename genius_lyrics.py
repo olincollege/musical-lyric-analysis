@@ -78,6 +78,63 @@ def find_album(name):
     # signify this.
     return ("-1", "Not Found")
 
+def download_song_lyrics(song_id):
+    """
+    Given a Genius ID of a song, download the lyrics of that song.
+
+    Lyrics are returned after being split as a list representing individual
+    words, with punctuation marks being removed to prevent these from appearing
+    as unique words later in the process.
+
+    Args:
+        song_id: string representing the numerical Genius ID of a song
+    Returns:
+        list of strings representing the individual words that make up the 
+            song's lyrics
+    
+    """
+    genius_object = lg.Genius(key.CLIENT_ACCESS_TOKEN)
+
+    # Uses lyricsgenius to get the lyrics for the requested song based on
+    # it's ID
+    #
+    # _NOTE: The Genius API doesn't provide lyrics directly, so the
+    # lyricsgenius library scraped
+    song_lyrics = genius_object.lyrics(song_id)
+
+    # This line replaces all punctuation marks in the string with empty
+    # space so that words are not marked as unique just because they have
+    # punctuation marks in them.
+    song_lyrics = song_lyrics.translate(
+        str.maketrans("", "", PUNCTUATION_MARKS)
+    )
+
+    # The single string containing all lyrics in the song is split into a
+    # list. Without another parameter, the split function will by default
+    # split strings based on white space, which will result in each word
+    # getting its own individual place in the list.
+    song_lyrics_split = song_lyrics.split()
+
+    # Using list comprehension, all words within this list that are touching
+    # brackets are removed. Having notes regarding who is singing is common
+    # in musicals, however, these notes are not sung and thus shouldn't be
+    # included with in the lyrics
+    song_lyrics_filtered = [
+        word.lower()
+        for word in song_lyrics_split
+        if (("[" not in word) and ("]" not in word))
+    ]
+
+    # The results returned by the lyricsgenius library were found to
+    # consistently contain extra garbage with the first and second word.
+    # To alleviate this, the only way to reliably handle this is to
+    # remove these words completely.
+    song_lyrics_filtered = song_lyrics_filtered[
+        1 : len(song_lyrics_filtered) - 1
+    ]
+
+    return song_lyrics_filtered
+
 
 def download_all_lyrics(album_id):
     """
@@ -120,48 +177,10 @@ def download_all_lyrics(album_id):
 
         # Pulls the song ID out from the rest of the information provided by the
         # Genius API
-        song_id = song["song"]["id"]
-
-        # Uses lyricsgenius to get the lyrics for the requested song based on
-        # it's ID
-        #
-        # _NOTE: The Genius API doesn't provide lyrics directly, so the
-        # lyricsgenius library scraped
-        song_lyrics = genius_object.lyrics(song_id)
-
-        # This line replaces all punctuation marks in the string with empty
-        # space so that words are not marked as unique just because they have
-        # punctuation marks in them.
-        song_lyrics = song_lyrics.translate(
-            str.maketrans("", "", PUNCTUATION_MARKS)
-        )
-
-        # The single string containing all lyrics in the song is split into a
-        # list. Without another parameter, the split function will by default
-        # split strings based on white space, which will result in each word
-        # getting its own individual place in the list.
-        song_lyrics_split = song_lyrics.split()
-
-        # Using list comprehension, all words within this list that are touching
-        # brackets are removed. Having notes regarding who is singing is common
-        # in musicals, however, these notes are not sung and thus shouldn't be
-        # included with in the lyrics
-        song_lyrics_filtered = [
-            word.lower()
-            for word in song_lyrics_split
-            if (("[" not in word) and ("]" not in word))
-        ]
-
-        # The results returned by the lyricsgenius library were found to
-        # consistently contain extra garbage with the first and second word.
-        # To alleviate this, the only way to reliably handle this is to
-        # remove these words completely.
-        song_lyrics_filtered = song_lyrics_filtered[
-            1 : len(song_lyrics_filtered) - 1
-        ]
+        song_id = song["song"]["id"]        
 
         # Each list is appended to the master list for all songs in the album.
-        album_lyrics.append(song_lyrics_filtered)
+        album_lyrics.append(download_song_lyrics(song_id))
 
     return album_lyrics
 
