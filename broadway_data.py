@@ -147,6 +147,7 @@ def sum_data(load_filepath=PROCESSED_FILE_PATH, save_filepath=SUMMED_FILE_PATH):
     # Each list is then added as a new column of the newly created dataframe.
     summed_dataframe["Attendance"] = all_musicals_attendance
     summed_dataframe["NumPerformances"] = all_musicals_num_performances
+    summed_dataframe["WeeksPerformed"] = all_musicals_length_of_run
 
     # Finally, this data is again written to a separate csv file in the project
     # directory.

@@ -232,9 +232,9 @@ def test_summing_broadway_data():
         test_data = list(csv_reader)
 
     data_key = [
-        ["ShowName", "Attendance", "NumPerformances"],
-        ["FWOP's Amazing Performance 1", "145009", "14"],
-        ["FWOP's Amazing Performance 2", "13943", "9"],
+        ["ShowName", "Attendance", "NumPerformances", "WeeksPerformed"],
+        ["FWOP's Amazing Performance 1", "145009", "14", "3"],
+        ["FWOP's Amazing Performance 2", "13943", "9", "1"],
     ]
 
     assert test_data == data_key
