@@ -267,8 +267,14 @@ def calculate_lyrical_uniqueness(lyrics):
     for word in lyrics:
         if word not in unique_words:
             unique_words.append(word)
-
-    return int((len(unique_words) / len(lyrics)) * 100)
+    
+    try:
+        return int((len(unique_words) / len(lyrics)) * 100)
+    
+    # If a song's lyrics are empty, return a score of zero (since the lyrics
+    # wouldn't have any impact on the show's attendance)
+    except ZeroDivisionError:
+        return 0
 
 
 def calculate_album_uniqueness(all_album_lyrics):
