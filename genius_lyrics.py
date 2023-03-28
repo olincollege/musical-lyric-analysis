@@ -93,14 +93,14 @@ def download_song_lyrics(song_id):
             song's lyrics
     
     """
-    genius_object = lg.Genius(key.CLIENT_ACCESS_TOKEN)
+    genius_object_song = lg.Genius(key.CLIENT_ACCESS_TOKEN)
 
     # Uses lyricsgenius to get the lyrics for the requested song based on
     # it's ID
     #
     # _NOTE: The Genius API doesn't provide lyrics directly, so the
     # lyricsgenius library scraped
-    song_lyrics = genius_object.lyrics(song_id)
+    song_lyrics = genius_object_song.lyrics(song_id)
 
     # This line replaces all punctuation marks in the string with empty
     # space so that words are not marked as unique just because they have
