@@ -14,6 +14,13 @@ PUNCTUATION_MARKS = "\"!#$%&'()*+,-./:;<=>?@\^_`{|}~"
 # removed
 REMOVE_FROM_LYRICS = ["\u200b", "translations", "embed"]
 
+# Some songs are loaded in the Genius database such that there is no way to
+# access any information about receiving an HTTP authentication error.
+# As such, these songs have to be hardcoded to skip based on there being
+# no more efficent way to remove them (there is no way to gather information
+# about them)
+SONGS_TO_IGNORE = ["7105313"]
+
 
 def find_album(name):
     """
@@ -93,6 +100,11 @@ def download_song_lyrics(song_id):
             song's lyrics
     
     """
+    # Ignore songs that specifically result in errors with the lyricsgenius 
+    # libary
+    if song_id in SONGS_TO_IGNORE:
+        return []
+    
     genius_object_song = lg.Genius(key.CLIENT_ACCESS_TOKEN)
 
     # Uses lyricsgenius to get the lyrics for the requested song based on
