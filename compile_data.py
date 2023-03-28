@@ -30,4 +30,6 @@ def find_corresponding_album():
     musical_data = musical_data[musical_data["GeniusID"] != "-1"]
     musical_data = musical_data.reset_index(drop=True)
 
-    musical_data.to_csv("musical_genius_data.csv", encoding="utf-8", index=False)
+    musical_data.to_csv(
+        "musical_genius_data.csv", encoding="utf-8", index=False
+    )

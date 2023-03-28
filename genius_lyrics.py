@@ -85,6 +85,7 @@ def find_album(name):
     # signify this.
     return ("-1", "Not Found")
 
+
 def download_song_lyrics(song_id):
     """
     Given a Genius ID of a song, download the lyrics of that song.
@@ -96,15 +97,15 @@ def download_song_lyrics(song_id):
     Args:
         song_id: string representing the numerical Genius ID of a song
     Returns:
-        list of strings representing the individual words that make up the 
+        list of strings representing the individual words that make up the
             song's lyrics
-    
+
     """
-    # Ignore songs that specifically result in errors with the lyricsgenius 
+    # Ignore songs that specifically result in errors with the lyricsgenius
     # libary
     if song_id in SONGS_TO_IGNORE:
         return []
-    
+
     genius_object_song = lg.Genius(key.CLIENT_ACCESS_TOKEN)
 
     # Uses lyricsgenius to get the lyrics for the requested song based on
@@ -184,12 +185,14 @@ def download_all_lyrics(album_id):
         # throw an error if the lyrics of such a song are requested. If an
         # instrumental song is reached, it is ignored and the loop continues to
         # the next song on the album.
-        if song["song"]["instrumental"]:
+        if song["song"]["instrumental"] or (
+            song["song"]["lyrics_state"] == "incomplete"
+        ):
             continue
 
         # Pulls the song ID out from the rest of the information provided by the
         # Genius API
-        song_id = song["song"]["id"]        
+        song_id = song["song"]["id"]
 
         # Each list is appended to the master list for all songs in the album.
         album_lyrics.append(download_song_lyrics(song_id))
