@@ -14,13 +14,6 @@ PUNCTUATION_MARKS = "\"!#$%&'()*+,-./:;<=>?@\^_`{|}~"
 # removed
 REMOVE_FROM_LYRICS = ["\u200b", "translations", "embed"]
 
-# Some songs are loaded in the Genius database such that there is no way to
-# access any information about receiving an HTTP authentication error.
-# As such, these songs have to be hardcoded to skip based on there being
-# no more efficent way to remove them (there is no way to gather information
-# about them)
-SONGS_TO_IGNORE = ["7105313"]
-
 
 def find_album(name):
     """
@@ -101,11 +94,6 @@ def download_song_lyrics(song_id):
             song's lyrics
 
     """
-    # Ignore songs that specifically result in errors with the lyricsgenius
-    # libary
-    if song_id in SONGS_TO_IGNORE:
-        return []
-
     genius_object_song = lg.Genius(key.CLIENT_ACCESS_TOKEN)
 
     # Uses lyricsgenius to get the lyrics for the requested song based on
@@ -115,12 +103,13 @@ def download_song_lyrics(song_id):
     # lyricsgenius library scraped
     song_lyrics = genius_object_song.lyrics(song_id)
 
+    if song_lyrics is None:
+        return []
+
     # This line replaces all punctuation marks in the string with empty
     # space so that words are not marked as unique just because they have
     # punctuation marks in them.
-    song_lyrics = song_lyrics.translate(
-        str.maketrans("", "", PUNCTUATION_MARKS)
-    )
+    song_lyrics = song_lyrics.translate(str.maketrans("", "", PUNCTUATION_MARKS))
 
     # The single string containing all lyrics in the song is split into a
     # list. Without another parameter, the split function will by default
@@ -142,9 +131,7 @@ def download_song_lyrics(song_id):
     # consistently contain extra garbage with the first and second word.
     # To alleviate this, the only way to reliably handle this is to
     # remove these words completely.
-    song_lyrics_filtered = song_lyrics_filtered[
-        1 : len(song_lyrics_filtered) - 1
-    ]
+    song_lyrics_filtered = song_lyrics_filtered[1 : len(song_lyrics_filtered) - 1]
 
     return song_lyrics_filtered
 
