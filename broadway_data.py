@@ -9,6 +9,19 @@ BROADWAY_DATA_URL = (
 PROCESSED_FILE_PATH = "processed_broadway_data.csv"
 SUMMED_FILE_PATH = "summed_broadway_data.csv"
 
+# define a list of columns that is included in the original CORGIS dataset
+# that are not useful to our project and thus can be dropped. Drop each
+# column in the list from the dataframe.
+COLUMNS_TO_DROP = [
+    "Date.Day",
+    "Date.Month",
+    "Date.Year",
+    "Show.Theatre",
+    "Statistics.Capacity",
+    "Statistics.Gross",
+    "Statistics.Gross Potential",
+]
+
 
 def get_broadway_data(
     data_download_url=BROADWAY_DATA_URL, filepath=PROCESSED_FILE_PATH
@@ -44,19 +57,6 @@ def get_broadway_data(
     ]
     broadway_musicals = broadway_musicals[
         broadway_musicals["Date.Year"] >= 1995
-    ]
-
-    # define a list of columns that is included in the original CORGIS dataset
-    # that are not useful to our project and thus can be dropped. Drop each
-    # column in the list from the dataframe.
-    COLUMNS_TO_DROP = [
-        "Date.Day",
-        "Date.Month",
-        "Date.Year",
-        "Show.Theatre",
-        "Statistics.Capacity",
-        "Statistics.Gross",
-        "Statistics.Gross Potential",
     ]
 
     for column in COLUMNS_TO_DROP:
@@ -117,22 +117,31 @@ def sum_data(load_filepath=PROCESSED_FILE_PATH, save_filepath=SUMMED_FILE_PATH):
     # dataframe later.
     all_musicals_attendance = []
     all_musicals_num_performances = []
+    all_musicals_length_of_run = []
 
     # each unique musical is looped through, where all performances of that
     # musical are pulled out of the complete dataframe and then the total
     # attendance and number of performances are summed together. These are added
     # to the prior created lists in the same order as the musicals.
+    # The number of weeks the musical was on broadway is also calculated based
+    # on the number of entries.
     for musical in all_musicals:
         all_performances_of_musical = processed_dataframe[
             processed_dataframe["Show.Name"] == musical
         ]
 
-        attendance = all_performances_of_musical["Statistics.Attendance"].sum()
+        all_performances_of_musical = all_performances_of_musical.reset_index(
+            drop=True
+        )
+
+        all_musicals_length_of_run.append(all_performances_of_musical.shape[0])
+
+        attendance = int(all_performances_of_musical["Statistics.Attendance"].sum())
         all_musicals_attendance.append(attendance)
 
-        num_performances = all_performances_of_musical[
+        num_performances = int(all_performances_of_musical[
             "Statistics.Performances"
-        ].sum()
+        ].sum())
         all_musicals_num_performances.append(num_performances)
 
     # Each list is then added as a new column of the newly created dataframe.

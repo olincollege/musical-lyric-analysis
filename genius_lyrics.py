@@ -79,6 +79,66 @@ def find_album(name):
     return ("-1", "Not Found")
 
 
+def split_and_format_song_lyrics(song_lyrics):
+    """
+    Formats a string's lyrics in a way that makes sense for further uniquness
+    processing and calculation. Specifically, it formats strings as all 
+    lowercase, breaks the string into a list containing a string for each word
+    in the lyrics, removing punctuation marks, and making the lyrics all
+    lowercase. Additionally, any words contained within brackets are removed,
+    since these denote who is speaking in a musical's script and are thus not
+    words the audience would hear.
+
+    Additionally, the first and last word are ignored in order to filter out
+    garbage that is included with the Genius results (since this relies on
+    scraping data rather than the Genius API directly, which is an imperfect
+    science). This abstraction is acceptable to make for this project since
+    it is being equally applied to every word.
+
+    Args:
+        lyrics: string representing all the lyrics in a particular song.
+    Returns:
+        A list of strings where each string is an individual word in the lyrics. 
+    """
+    # If Genius fails to find a match, it returns None, which should result
+    # in an empty string being returned.
+    if song_lyrics is None:
+        return []
+    
+    # This line replaces all punctuation marks in the string with empty
+    # space so that words are not marked as unique just because they have
+    # punctuation marks in them.
+    song_lyrics = song_lyrics.translate(
+        str.maketrans("", "", PUNCTUATION_MARKS)
+    )
+
+    # The single string containing all lyrics in the song is split into a
+    # list. Without another parameter, the split function will by default
+    # split strings based on white space, which will result in each word
+    # getting its own individual place in the list.
+    song_lyrics_split = song_lyrics.split()
+
+    # Using list comprehension, all words within this list that are touching
+    # brackets are removed. Having notes regarding who is singing is common
+    # in musicals, however, these notes are not sung and thus shouldn't be
+    # included with in the lyrics
+    song_lyrics_filtered = [
+        word.lower()
+        for word in song_lyrics_split
+        if (("[" not in word) and ("]" not in word))
+    ]
+
+    # The results returned by the lyricsgenius library were found to
+    # consistently contain extra garbage with the first and second word.
+    # To alleviate this, the only way to reliably handle this is to
+    # remove these words completely.
+    song_lyrics_filtered = song_lyrics_filtered[
+        1 : len(song_lyrics_filtered) - 1
+    ]
+
+    return song_lyrics_filtered
+
+
 def download_song_lyrics(song_id):
     """
     Given a Genius ID of a song, download the lyrics of that song.
@@ -103,37 +163,7 @@ def download_song_lyrics(song_id):
     # lyricsgenius library scraped
     song_lyrics = genius_object_song.lyrics(song_id)
 
-    if song_lyrics is None:
-        return []
-
-    # This line replaces all punctuation marks in the string with empty
-    # space so that words are not marked as unique just because they have
-    # punctuation marks in them.
-    song_lyrics = song_lyrics.translate(str.maketrans("", "", PUNCTUATION_MARKS))
-
-    # The single string containing all lyrics in the song is split into a
-    # list. Without another parameter, the split function will by default
-    # split strings based on white space, which will result in each word
-    # getting its own individual place in the list.
-    song_lyrics_split = song_lyrics.split()
-
-    # Using list comprehension, all words within this list that are touching
-    # brackets are removed. Having notes regarding who is singing is common
-    # in musicals, however, these notes are not sung and thus shouldn't be
-    # included with in the lyrics
-    song_lyrics_filtered = [
-        word.lower()
-        for word in song_lyrics_split
-        if (("[" not in word) and ("]" not in word))
-    ]
-
-    # The results returned by the lyricsgenius library were found to
-    # consistently contain extra garbage with the first and second word.
-    # To alleviate this, the only way to reliably handle this is to
-    # remove these words completely.
-    song_lyrics_filtered = song_lyrics_filtered[1 : len(song_lyrics_filtered) - 1]
-
-    return song_lyrics_filtered
+    return split_and_format_song_lyrics(song_lyrics)
 
 
 def download_all_lyrics(album_id):
@@ -182,7 +212,10 @@ def download_all_lyrics(album_id):
         song_id = song["song"]["id"]
 
         # Each list is appended to the master list for all songs in the album.
-        album_lyrics.append(download_song_lyrics(song_id))
+        # Songs that do not have lyrics for any reason are excluded.
+        song_lyrics = download_song_lyrics(song_id)
+        if song_lyrics is not []:
+            album_lyrics.append(download_song_lyrics(song_id))
 
     return album_lyrics
 
@@ -267,10 +300,10 @@ def calculate_lyrical_uniqueness(lyrics):
     for word in lyrics:
         if word not in unique_words:
             unique_words.append(word)
-    
+
     try:
         return int((len(unique_words) / len(lyrics)) * 100)
-    
+
     # If a song's lyrics are empty, return a score of zero (since the lyrics
     # wouldn't have any impact on the show's attendance)
     except ZeroDivisionError:

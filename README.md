@@ -20,8 +20,12 @@ In order to run this code:
 ## Reproducing Results
 `compile_data.py` provides an overview of how all of the various pieces of this project come together to analyze lyrical data, and we suggest you take a look at this if you're looking to do a similar analysis of lyrics.
 
-For a more complete look at our implementation and results, more information can be found in the project's [computational essay](https://writings.stephenwolfram.com/2017/11/what-is-a-computational-essay/). This essay is provided in the format of a Jupyter iteractive Python notebook (.ipynb) file, formatted with Quarto for easier version control. This can be viewed by
+For a more complete look at our implementation and results, more information can be found in the project's computational essay [(what is a computational essay?)](https://writings.stephenwolfram.com/2017/11/what-is-a-computational-essay/). This essay is provided in the format of a Jupyter interactive Python notebook (.ipynb) file, formatted with Quarto for easier version control. This can be viewed by
 * Installing quarto with `pip install quarto`
 * Converting the essay by running `quarto convert lyrical_analysis_essay.qmd`
 * Opening the converted notebook (`lyrical_analysis_essay.ipynb`) either using the Jupyter editor, VS Code Jupyter plugin, or another tool capable of reading these files.
+
+
+## Credits
+This project was created by Carter Harris & Elin O'Neill as part of the Software Design course at Olin College of Engineering.
 
