@@ -16,7 +16,7 @@ Before we get into the nitty-gritty of data sources and hundreds of lyrics, what
 
 **CORGIS Broadway Data**
 
-The [CORGIS (Collection of Really Great, Intersting, Situated Datasets) Project](https://corgis-edu.github.io/corgis/) is a collection of various datasets that contain interesting statistics of everything from flight delays to smoking trends to reported UFO sightings. However, of our interest, the CORGIS project has a dataset consisting of various data about shows on Broadway. This dataset, including data from the mid 1990s up until 2016, contains every show that was on Broadway, it's attendance, the number of shows performed, and various other data on a week-by-week basis. '
+The [CORGIS (Collection of Really Great, Intersting, Situated Datasets) Project](https://corgis-edu.github.io/corgis/) is a collection of various datasets that contain interesting statistics of everything from flight delays to smoking trends to reported UFO sightings. However, of our interest, the CORGIS project has [a dataset](https://corgis-edu.github.io/corgis/csv/broadway/) consisting of various data about shows on Broadway. This dataset, including data from the mid 1990s up until 2016, contains every show that was on Broadway, it's attendance, the number of shows performed, and various other data on a week-by-week basis. '
 
 **Genius Lyrics**
 
@@ -27,25 +27,26 @@ The [CORGIS (Collection of Really Great, Intersting, Situated Datasets) Project]
 The CORGIS Broadway dataset needed to be modified to fit the project's needs. First, all Broadway Plays were removed since scripts for plays are not readily and easily accessible. Next, all performances before the year 1995 were filtered out since the data seemed to be full of gaps. After this, all other irrelevant columns of data were dropped including the show's date (day, month, and year), the name of the theater it was performed at, the capacity, the potential gross profit, and the gross profit. The refined data was then written to a CSV file in the project directory.
 
 ```{python}
+#| vscode: {languageId: python}
 import broadway_data as broadway
 
 # Downloads Broadway data from the CORGIS database and filters it.
 broadway.get_broadway_data()
 ```
 
-
 Utilizing this new CSV file, the overall attendance for each Broadway show was calculated. The data in the CORGIS dataset is provided on a week-to-week basis, while this project is only interested in the totals across the show's entire run. This data along with each shows' name was added to a new CSV file called summed_broadway_data.csv. Additionally, the length of time the show is on broadway for (calculated by how many weekly entries there are) is calculated at this step.
 
 ```{python}
+#| vscode: {languageId: python}
 # Uses previous data to sum all unique musical's attendance, number of
 # performances, and length of run together.
 broadway.sum_data()
 ```
 
-
 Finding the correct album on Genius to use is not as simple as it may seem. If just the show's title is inputted things could go wrong in many different ways. For example, if just "Sweeney Todd" is inputted, the movie soundtrack may come up, which has cut many of the songs and has cut all sung ensemble lines so it would translate better to a film. This makes the movie's lyrics vastly shorter than the Broadway musical's. If just "Cry Baby" is inputted, then the Melanie Martinez album may appear by mistake due to its popularity in comparison to the musical of the same name. Some musicals have more common or ambiguous words making up their titles such as "Assassins," making it difficult to use only the title as the search term. To counteract this issue, an album was only "found" for a musical if the keyworkd "broadway", "cast", *or* "recording" were found to be included with the title. When searching for an album on Genius, it returns the first 5 results that match the search terms, and we are choosing the first one to include one of these keywords.
 
 ```{python}
+#| vscode: {languageId: python}
 # genius_lyrics contains many funtions that are referenced as part of funtions 
 # in compile_data even though none of the funtions are directly ran by 
 # themselves. For example, functions in genius_lyrics are responsible for
@@ -56,38 +57,38 @@ import genius_lyrics as genius
 import compile_data as cd
 ```
 
-
 Each show included in the Broadway dataset then needed to be matched to its corresponding album & lyrics on Genius. Each album and song found on Genius has a unique Album ID and Song ID respectively. Using this Album ID, all of the proper song IDs for each musical were collected, allowing for the program to access an entire album's lyrics. A CSV file, titled by Album ID, was created for each musical; in it each row corresponded to a different song and each column was populated by an individual lyric in that song. This scheme of saving lyrics to individual CSV files was chosen since downloading lyrics is a very time-intensive process (taking upwards of a minute per musical), so this allowed us to download lyrics a single time and quickly retireve them later. This also allows us to avoid issues with the Genius API rate limiting the program.
 
 ```{python}
+#| vscode: {languageId: python}
 # This funtion both finds the correct Broadway soundtrack for each show on 
 # Genius and retrieves its Album ID
 cd.find_corresponding_album()
 ```
 
-
 To ensure that what is counted as a unique "lyrics" was not impacted by the inclusion of differing punctuation and that these lyrics are easily readable, some preliminary changes were made to the lyrics that were pulled. First, all puntuation (\"!#$%&'()*+,-./:;<=>?@\^_`{|}~) was removed. After that all lyrics were made entirely lowercase. Finally, any word that contained square brackets ([]) was removed since that is Genius Lyrics' way of denoting the speaker/singer for the lyrics that follow.
 
 ```{python}
+#| vscode: {languageId: python}
 # Downloads every musical's lyrics and filters out all unwanted 
 # characters/words.
 cd.download_lyrics()
 ```
 
-
 Lyrical uniqueness was calculated by dividing the number of unique words (meaning there were no other instances of that word within that song) in a song by the total number of words in that song. This uniqueness score for each song was then averaged with the other scores for that specific musical to determine the whole show's lyrical uniqueness.
 
 ```{python}
+#| vscode: {languageId: python}
 # Calculates lyrical uniqueness for every show.
 cd.find_all_uniqueness_scores()
 ```
-
 
 ### Results
 
 After a lyrical uniqueness score was calculated for each musical, this score could then be compared to different measures of a Broadway musical's success such as total attendance and the number of weeks the show remained on broadway (both of these contained between the years 1995 and 2016). From this point it is then possible to determine if lyrical uniqeness has any impact on a show's box office success or longevity.
 
 ```{python}
+#| vscode: {languageId: python}
 # Calculates average attendance and number of weeks on broadway for shows based
 # on their shared lyrical uniqueness scores (this is explained more later on).
 cd.avg_scores_data()
@@ -101,6 +102,7 @@ To produce this first graph, all musicals sharing a lyrical uniqueness score had
 The two noticable outliers, occuring at lyrical uniqueness scores 37 and 35, are a result of The Lion King (a very successful musical) not sharing a lyrical uniqueness score with any other show, resulting in an extremely high average and Mamma Mia (another highly successful show) only sharing it's lyrical uniqueness score with one other show. For lyrical uniqueness scores with fewer shows associated with them, the data can become very skewed if the few shows that have that score have attendance rates that are extreme.
 
 ```{python}
+#| vscode: {languageId: python}
 # Creates plot.
 cd.plot_data_unique_weeks()
 ```
@@ -112,6 +114,7 @@ The two noticable outliers, occuring at lyrical uniqueness scores 37 and 35, are
 This graph is visually very similar to the previous graph that looked at attendance. Although, technically, two completely seperate things are being measured in these two graphs, the number of weeks a show is on broadway directly impacts how many people have the oppertunity to see it. On the other hand, the more popular the show is, the more money it generates, allowing it to stay on Broadway for more weeks. These graphs are so similar because the things they measure, although completely seperate, still directly impact each other.
 
 ```{python}
+#| vscode: {languageId: python}
 # Creates plot.
 cd.plot_data_total_attendance()
 ```
