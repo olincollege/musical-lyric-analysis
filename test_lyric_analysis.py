@@ -4,6 +4,7 @@ import os
 import csv
 import genius_lyrics as lyrics
 import broadway_data as broadway
+import compile_data as cd
 
 
 #
@@ -140,11 +141,12 @@ def test_words_in_brackets_removed_from_lyrics():
 
     assert lyrics.split_and_format_song_lyrics(raw_lyrics) == processed_lyrics
 
+
 def test_lyrics_with_one_word():
     """
     Given the nessesity to manipulate lyrics and remove certain ones,
     check that an error isn't thrown when a song with only one word is
-    processed. 
+    processed.
     """
 
     assert lyrics.split_and_format_song_lyrics("word") == []
@@ -243,6 +245,98 @@ def test_summing_broadway_data():
         ["ShowName", "Attendance", "NumPerformances", "WeeksPerformed"],
         ["FWOP's Amazing Performance 1", "145009", "14", "3"],
         ["FWOP's Amazing Performance 2", "13943", "9", "1"],
+    ]
+
+    assert test_data == data_key
+
+
+#
+# Tests for compile_data.py
+#
+# This includes ensuring uniqueness scores and total lyric counts are correct
+# and data is properly averaged by lyrical uniqueness score.
+#
+#
+
+
+def test_finding_all_uniqueness_scores():
+    """
+    Tests that the uniqueness scores and total lyric counts are correct for
+    cases in which all lyrics are unique and cases in which not all of the
+    lyrics are unique.
+    """
+    cd.find_all_uniqueness_scores(
+        "testing/uniqueness_test_data.csv", "testing/test_musical_scores.csv"
+    )
+
+    with open("testing/test_musical_scores.csv", "r", encoding="utf-8") as file:
+        csv_reader = csv.reader(file)
+        test_data = list(csv_reader)
+
+    data_key = [
+        [
+            "ShowName",
+            "Attendance",
+            "NumPerformances",
+            "WeeksPerformed",
+            "GeniusID",
+            "AlbumTitle",
+            "UniquenessScore",
+            "TotalLyricCount",
+        ],
+        [
+            "FWOP's Cool Show 1",
+            "1000",
+            "100",
+            "10",
+            "1",
+            "FWOP's Cool Show 1",
+            "100",
+            "5",
+        ],
+        [
+            "FWOP's Cool Show 2",
+            "2000",
+            "200",
+            "20",
+            "2",
+            "FWOP's Cool Show 2",
+            "87",
+            "6",
+        ],
+        [
+            "FWOP's Cool Show 3",
+            "3000",
+            "300",
+            "30",
+            "3",
+            "FWOP's Cool Show 3",
+            "100",
+            "3",
+        ],
+    ]
+
+    assert test_data == data_key
+
+
+def test_avg_scores_data():
+    """
+    Tests that the uniqueness scores, attendances, number of weeks performed,
+    and number of performances are properly averaged for each uniqueness score.
+    """
+
+    cd.avg_scores_data(
+        "testing/test_musical_scores.csv", "testing/test_score_dataframe.csv"
+    )
+
+    with open("testing/test_score_dataframe.csv", "r", encoding="utf-8") as file:
+        csv_reader = csv.reader(file)
+        test_data = list(csv_reader)
+
+    data_key = data_key = [
+        ["UniquenessScore", "Attendance", "WeeksPerformed", "NumPerformances"],
+        ["100", "2000.0", "20.0", "200.0"],
+        ["87", "2000.0", "20.0", "200.0"],
     ]
 
     assert test_data == data_key
