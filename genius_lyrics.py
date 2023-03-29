@@ -82,7 +82,7 @@ def find_album(name):
 def split_and_format_song_lyrics(song_lyrics):
     """
     Formats a string's lyrics in a way that makes sense for further uniquness
-    processing and calculation. Specifically, it formats strings as all 
+    processing and calculation. Specifically, it formats strings as all
     lowercase, breaks the string into a list containing a string for each word
     in the lyrics, removing punctuation marks, and making the lyrics all
     lowercase. Additionally, any words contained within brackets are removed,
@@ -98,19 +98,17 @@ def split_and_format_song_lyrics(song_lyrics):
     Args:
         lyrics: string representing all the lyrics in a particular song.
     Returns:
-        A list of strings where each string is an individual word in the lyrics. 
+        A list of strings where each string is an individual word in the lyrics.
     """
     # If Genius fails to find a match, it returns None, which should result
     # in an empty string being returned.
     if song_lyrics is None:
         return []
-    
+
     # This line replaces all punctuation marks in the string with empty
     # space so that words are not marked as unique just because they have
     # punctuation marks in them.
-    song_lyrics = song_lyrics.translate(
-        str.maketrans("", "", PUNCTUATION_MARKS)
-    )
+    song_lyrics = song_lyrics.translate(str.maketrans("", "", PUNCTUATION_MARKS))
 
     # The single string containing all lyrics in the song is split into a
     # list. Without another parameter, the split function will by default
@@ -132,9 +130,7 @@ def split_and_format_song_lyrics(song_lyrics):
     # consistently contain extra garbage with the first and second word.
     # To alleviate this, the only way to reliably handle this is to
     # remove these words completely.
-    song_lyrics_filtered = song_lyrics_filtered[
-        1 : len(song_lyrics_filtered) - 1
-    ]
+    song_lyrics_filtered = song_lyrics_filtered[1 : len(song_lyrics_filtered) - 1]
 
     return song_lyrics_filtered
 
@@ -333,3 +329,22 @@ def calculate_album_uniqueness(all_album_lyrics):
         total_percentages += calculate_lyrical_uniqueness(song)
 
     return int(total_percentages / len(all_album_lyrics))
+
+
+def calculate_total_lyrics(lyrics):
+    """
+    Finds the total number of lyrics in an album and returns it as an integer.
+
+    Args:
+        lyrics: A list of lists, which each embedded list containing strings for each
+            individual word in a songs lyrics. Each song on the album
+            gets its own embedded list.
+    Return:
+        Integer representing the total number of lyrics in an album
+
+    """
+    total_lyrics = 0
+    for song in lyrics:
+        total_lyrics += len(song)
+
+    return total_lyrics
