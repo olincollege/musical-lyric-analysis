@@ -104,26 +104,29 @@ def test_standard_lyrics_processed():
         "sets",
         "of",
     ]
-    
+
     assert lyrics.split_and_format_song_lyrics(raw_lyrics) == expected_result
 
-def test_songs_without_lyrics():
+
+def test_song_processing_without_lyrics():
     """
     Test that for songs where there are no lyrics, an empty list is returned.
     This could ocassionaly occur for songs that are instrumental but not
-    marked as so in the Genius database. 
+    marked as so in the Genius database.
     """
 
     assert lyrics.split_and_format_song_lyrics("") == []
 
-def test_songs_without_genius_matches():
-    """"
+
+def test_song_processing_without_genius_matches():
+    """ "
     If for whatever reason a song is not found when doing a Genius search for
     it, None is returned. This should result in an empty list so that the song
     is ignored in any following code.
     """
 
     assert lyrics.split_and_format_song_lyrics(None) == []
+
 
 def test_words_in_brackets_removed_from_lyrics():
     """
@@ -133,13 +136,18 @@ def test_words_in_brackets_removed_from_lyrics():
     """
 
     raw_lyrics = "One two [bracket] three four [bracket bracket] five"
-    processed_lyrics = [
-        "two",
-        "three",
-        "four"
-    ]
+    processed_lyrics = ["two", "three", "four"]
 
     assert lyrics.split_and_format_song_lyrics(raw_lyrics) == processed_lyrics
+
+def test_lyrics_with_one_word():
+    """
+    Given the nessesity to manipulate lyrics and remove certain ones,
+    check that an error isn't thrown when a song with only one word is
+    processed. 
+    """
+
+    assert lyrics.split_and_format_song_lyrics("word") == []
 
 
 #
