@@ -208,5 +208,5 @@ def plot_data_total_attendance():
     plt.plot(musical_scores["TotalLyricCount"], musical_scores["Attendance"], "bo")
     plt.xlabel("Total Number of Lyrics")
     plt.ylabel("Attendance")
-    plt.title("Total Broadway Attendance for Different Number Total Lyrics")
+    plt.title("Total Broadway Attendance for Different Number of Total Lyrics")
     plt.show()
