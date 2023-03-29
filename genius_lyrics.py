@@ -1,6 +1,12 @@
+"""
+Various functions that work to grab album, song, and lyrical information about
+songs using the Genius API.
+"""
+
+import csv
 import lyricsgenius as lg
 import api_keys as key
-import csv
+
 
 LIST_OF_ALBUM_KEYWORDS = ["Broadway", "Cast", "Recording"]
 
@@ -8,6 +14,7 @@ LIST_OF_ALBUM_KEYWORDS = ["Broadway", "Cast", "Recording"]
 # copied from Python's built-in string.punctuation, however, the brackets []
 # have been removed since anything inside of brackets will be removed entirely
 # (the words themselves, not just the marks)
+# pylint: disable=anomalous-backslash-in-string
 PUNCTUATION_MARKS = "\"!#$%&'()*+,-./:;<=>?@\^_`{|}~"
 
 
@@ -104,7 +111,9 @@ def split_and_format_song_lyrics(song_lyrics):
     # This line replaces all punctuation marks in the string with empty
     # space so that words are not marked as unique just because they have
     # punctuation marks in them.
-    song_lyrics = song_lyrics.translate(str.maketrans("", "", PUNCTUATION_MARKS))
+    song_lyrics = song_lyrics.translate(
+        str.maketrans("", "", PUNCTUATION_MARKS)
+    )
 
     # The single string containing all lyrics in the song is split into a
     # list. Without another parameter, the split function will by default
@@ -126,7 +135,9 @@ def split_and_format_song_lyrics(song_lyrics):
     # consistently contain extra garbage with the first and second word.
     # To alleviate this, the only way to reliably handle this is to
     # remove these words completely.
-    song_lyrics_filtered = song_lyrics_filtered[1 : len(song_lyrics_filtered) - 1]
+    song_lyrics_filtered = song_lyrics_filtered[
+        1 : len(song_lyrics_filtered) - 1
+    ]
 
     return song_lyrics_filtered
 
@@ -206,7 +217,8 @@ def download_all_lyrics(album_id):
         # Each list is appended to the master list for all songs in the album.
         # Songs that do not have lyrics for any reason are excluded.
         song_lyrics = download_song_lyrics(song_id)
-        if song_lyrics is not []:
+        empty_string = []
+        if song_lyrics is not empty_string:
             album_lyrics.append(download_song_lyrics(song_id))
 
     return album_lyrics
@@ -332,9 +344,9 @@ def calculate_total_lyrics(lyrics):
     Finds the total number of lyrics in an album and returns it as an integer.
 
     Args:
-        lyrics: A list of lists, which each embedded list containing strings for each
-            individual word in a songs lyrics. Each song on the album
-            gets its own embedded list.
+        lyrics: A list of lists, which each embedded list containing strings for
+            each individual word in a songs lyrics. Each song on the album gets
+            its own embedded list.
     Return:
         Integer representing the total number of lyrics in an album
 

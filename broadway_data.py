@@ -1,6 +1,10 @@
+"""
+Various functions to download and process the CORGIS Broadway dataset.
+"""
+import io
 import requests
 import pandas as pd
-import io
+
 
 BROADWAY_DATA_URL = (
     "https://corgis-edu.github.io/corgis/datasets/csv/broadway/broadway.csv"
@@ -77,7 +81,7 @@ def get_broadway_data(
 def sum_data(load_filepath=PROCESSED_FILE_PATH, save_filepath=SUMMED_FILE_PATH):
     """
     Previous downloaded & filtered Broadway data is loaded from the created csv
-    file and the data is further processed to sum all unique musicals 
+    file and the data is further processed to sum all unique musicals
     attendance, number of performances, and length of run together.
 
     Args:
@@ -136,12 +140,14 @@ def sum_data(load_filepath=PROCESSED_FILE_PATH, save_filepath=SUMMED_FILE_PATH):
 
         all_musicals_length_of_run.append(all_performances_of_musical.shape[0])
 
-        attendance = int(all_performances_of_musical["Statistics.Attendance"].sum())
+        attendance = int(
+            all_performances_of_musical["Statistics.Attendance"].sum()
+        )
         all_musicals_attendance.append(attendance)
 
-        num_performances = int(all_performances_of_musical[
-            "Statistics.Performances"
-        ].sum())
+        num_performances = int(
+            all_performances_of_musical["Statistics.Performances"].sum()
+        )
         all_musicals_num_performances.append(num_performances)
 
     # Each list is then added as a new column of the newly created dataframe.

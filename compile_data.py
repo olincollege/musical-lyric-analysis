@@ -1,3 +1,9 @@
+"""
+Functions to combine broadway data obtained in broadway_data.py with musical
+lyrics in genius_lyrics. Also provides plotting capabilities based on this data.
+
+"""
+
 import csv
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -42,7 +48,9 @@ def find_corresponding_album():
     musical_data = musical_data.reset_index(drop=True)
 
     # writes the dataset to a new CSV file
-    musical_data.to_csv("musical_genius_data.csv", encoding="utf-8", index=False)
+    musical_data.to_csv(
+        "musical_genius_data.csv", encoding="utf-8", index=False
+    )
 
 
 def download_lyrics():
@@ -69,6 +77,10 @@ def find_all_uniqueness_scores(
     """
     Calculates the uniqueness score and total lyric count for every musical and
     writes this data as well as the previous data to a new CSV file.
+
+    Args:
+        musical_genius_data: optional string specifying input file path
+        musical_scores_file: optional string specifying output file path
     """
     with open(musical_genius_data, "r", encoding="utf-8") as file:
         musical_scores = pd.read_csv(file)
@@ -91,7 +103,9 @@ def find_all_uniqueness_scores(
         score = lyrics.calculate_album_uniqueness(all_lyrics)
         uniqueness_scores.append(score)
 
-        total_lyrics = lyrics.calculate_total_lyrics(lyrics.get_all_lyrics(album_id))
+        total_lyrics = lyrics.calculate_total_lyrics(
+            lyrics.get_all_lyrics(album_id)
+        )
         lyric_totals.append(total_lyrics)
 
     # makes new columns in the CSV file to store the uniqueness scores and total
@@ -104,12 +118,17 @@ def find_all_uniqueness_scores(
 
 
 def avg_scores_data(
-    musical_scores_file="musical_scores.csv", score_dataframe_file="score_dataframe.csv"
+    musical_scores_file="musical_scores.csv",
+    score_dataframe_file="score_dataframe.csv",
 ):
     """
     Calculates the average attendance, number of weeks on broadway, and total
     number of performances for each lyrical uniqueness score and stores this
     data in a new CSV file titled score_dataframe.csv.
+
+    Args:
+        musical_scores_file: optional string specifying input file path.
+        scores_dataframe_file: optional string specifying output file path.
     """
     with open(musical_scores_file, "r", encoding="utf-8") as file:
         musical_scores = pd.read_csv(file)
@@ -137,7 +156,9 @@ def avg_scores_data(
     # These are added to the previously created lists in the same order as the
     # scores.
     for score in all_scores:
-        all_same_scores = musical_scores[musical_scores["UniquenessScore"] == score]
+        all_same_scores = musical_scores[
+            musical_scores["UniquenessScore"] == score
+        ]
 
         # averaging attendance
         attendance = all_same_scores["Attendance"].mean()
@@ -163,16 +184,27 @@ def avg_scores_data(
 
 def plot_data_unique_attendance(score_dataframe="score_dataframe.csv"):
     """
-    Creates a plot which shows the average attendance for each lyrical uniqueness
-    score. The lyrical uniqueness score is along the x-axis and the average
-    attendance is along the y-axis.
+    Creates a plot which shows the average attendance for each lyrical
+    uniqueness score. The lyrical uniqueness score is along the x-axis and the
+    average attendance is along the y-axis.
+
+    Args:
+        scores_dataframe: optional string representing the filepath to
+            uniqueness scores data. Defaults to the default output of
+            avg_scores_data
+    Returns:
+        Nothing. Creates plot.
     """
     # plot average attendance for each unique score
 
     with open(score_dataframe, "r", encoding="utf-8") as file:
         scores_dataframe = pd.read_csv(file)
 
-    plt.plot(scores_dataframe["UniquenessScore"], scores_dataframe["Attendance"], "bo")
+    plt.plot(
+        scores_dataframe["UniquenessScore"],
+        scores_dataframe["Attendance"],
+        "bo",
+    )
     plt.xlabel("Lyrical Uniqueness Score")
     plt.ylabel("Average Attendance")
     plt.title("Average Attendance for Each Lyrical Uniqueness Score")
@@ -184,6 +216,12 @@ def plot_data_unique_weeks(score_dataframe="score_dataframe.csv"):
     Creates a plot which shows the average number of weeks on broadway for each
     lyrical uniqueness score. The lyrical uniqueness score is along the x-axis
     and the average number of weeks on broadway is along the y-axis.
+
+    Args:
+        score_dataframe: optional string representing the filepath to the input
+            csv file. Defaults to the default output from avg_score_data
+    Returns:
+        Nothing. Creates plot.
     """
 
     with open(score_dataframe, "r", encoding="utf-8") as file:
@@ -191,11 +229,15 @@ def plot_data_unique_weeks(score_dataframe="score_dataframe.csv"):
 
     # plot average number of weeks on broadway for each unique score
     plt.plot(
-        scores_dataframe["UniquenessScore"], scores_dataframe["WeeksPerformed"], "bo"
+        scores_dataframe["UniquenessScore"],
+        scores_dataframe["WeeksPerformed"],
+        "bo",
     )
     plt.xlabel("Lyrical Uniqueness Score")
     plt.ylabel("Average Number of Weeks on Broadway")
-    plt.title("Average Number of Weeks on Broadway for Each Lyrical Uniqueness Score")
+    plt.title(
+        "Average Number of Weeks on Broadway for Each Lyrical Uniqueness Score"
+    )
     plt.show()
 
 
@@ -204,13 +246,22 @@ def plot_data_total_attendance(musical_scores="musical_scores.csv"):
     Creates a plot which shows the attendance in comparison to the total number
     of lyrics in a broadway show. The number of lyrics in the show is along the
     x-axis and the attendance is along the y-axis.
+
+    Args:
+        musical_scores: optional string representing the filepath to the input
+            csv file. Defaults to the default output from
+            find_all_uniqueness_scores
+    Returns:
+        Nothing. Creates plot.
     """
 
     with open(musical_scores, "r", encoding="utf-8") as file:
         musical_scores = pd.read_csv(file)
 
     # plot attendance compared to total lyric count
-    plt.plot(musical_scores["TotalLyricCount"], musical_scores["Attendance"], "bo")
+    plt.plot(
+        musical_scores["TotalLyricCount"], musical_scores["Attendance"], "bo"
+    )
     plt.xlabel("Total Number of Lyrics")
     plt.ylabel("Attendance")
     plt.title("Total Broadway Attendance for Different Number of Total Lyrics")

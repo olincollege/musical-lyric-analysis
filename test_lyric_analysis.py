@@ -1,7 +1,15 @@
-import pandas as pd
-import pytest
+"""
+Test all aspect of Broadway data downloading, lyrical uniqueness calculations,
+and data processing.
+
+Functions that are mainly comprised of external data calls (ie, a lot of
+genius_lyrics) are not tested and should be evaluated manually.
+"""
+
 import os
 import csv
+import pandas as pd
+import pytest
 import genius_lyrics as lyrics
 import broadway_data as broadway
 import compile_data as cd
@@ -159,15 +167,7 @@ def test_lyrics_with_one_word():
 #
 #
 
-COLUMNS_TO_DROP = [
-    "Date.Day",
-    "Date.Month",
-    "Date.Year",
-    "Show.Theatre",
-    "Statistics.Capacity",
-    "Statistics.Gross",
-    "Statistics.Gross Potential",
-]
+COLUMNS_TO_DROP = broadway.COLUMNS_TO_DROP
 
 COLUMNS_TO_KEEP = [
     "Show.Name",
@@ -329,7 +329,9 @@ def test_avg_scores_data():
         "testing/test_musical_scores.csv", "testing/test_score_dataframe.csv"
     )
 
-    with open("testing/test_score_dataframe.csv", "r", encoding="utf-8") as file:
+    with open(
+        "testing/test_score_dataframe.csv", "r", encoding="utf-8"
+    ) as file:
         csv_reader = csv.reader(file)
         test_data = list(csv_reader)
 
