@@ -62,7 +62,9 @@ def download_lyrics():
         lyrics.get_all_lyrics(album_id)
 
 
-def find_all_uniqueness_scores(musical_genius_data="musical_genius_data.csv"):
+def find_all_uniqueness_scores(
+    musical_genius_data="musical_genius_data.csv", musical_scores="musical_scores.csv"
+):
     """
     Calculates the uniqueness score and total lyric count for every musical and
     writes this data as well as the previous data to a new CSV file.
@@ -97,10 +99,12 @@ def find_all_uniqueness_scores(musical_genius_data="musical_genius_data.csv"):
     musical_scores["TotalLyricCount"] = lyric_totals
 
     # writes the new data to a new CSV file
-    musical_scores.to_csv("musical_scores.csv", encoding="utf-8", index=False)
+    musical_scores.to_csv(musical_scores, encoding="utf-8", index=False)
 
 
-def avg_scores_data(musical_scores="musical_scores.csv"):
+def avg_scores_data(
+    musical_scores="musical_scores.csv", score_dataframe="score_dataframe.csv"
+):
     """
     Calculates the average attendance, number of weeks on broadway, and total
     number of performances for each lyrical uniqueness score and stores this
@@ -153,7 +157,7 @@ def avg_scores_data(musical_scores="musical_scores.csv"):
 
     # Finally, this data is again written to a separate csv file in the project
     # directory.
-    score_dataframe.to_csv("score_dataframe.csv", encoding="utf-8", index=False)
+    score_dataframe.to_csv(score_dataframe, encoding="utf-8", index=False)
 
 
 def plot_data_unique_attendance(score_dataframe="score_dataframe.csv"):
