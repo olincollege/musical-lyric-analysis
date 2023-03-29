@@ -174,13 +174,11 @@ def plot_data_unique_attendance():
     plt.show()
 
 
-def plot_data_unique_attendance():
+def plot_data_unique_weeks():
     """
-    Creates various plots to visualize the Broadway data.
-
-    The first plot shows the average attendance for each lyrical uniqueness
-    score. The lyrical uniqueness score is along the x-axis and the average
-    attendance is along the y-axis.
+    Creates a plot which shows the average number of weeks on broadway for each
+    lyrical uniqueness score. The lyrical uniqueness score is along the x-axis
+    and the average number of weeks on broadway is along the y-axis.
     """
 
     with open("score_dataframe.csv", "r", encoding="utf-8") as file:
@@ -195,8 +193,18 @@ def plot_data_unique_attendance():
     plt.title("Average Number of Weeks on Broadway for Each Lyrical Uniqueness Score")
     plt.show()
 
+
+def plot_data_total_attendance():
+    """
+    Creates a plot which shows the attendance in comparison to the total number
+    of lyrics in a broadway show. The number of lyrics in the show is along the
+    x-axis and the attendance is along the y-axis.
+    """
+
     with open("musical_scores.csv", "r", encoding="utf-8") as file:
         musical_scores = pd.read_csv(file)
+
+    # plot attendance compared to total lyric count
     plt.plot(musical_scores["TotalLyricCount"], musical_scores["Attendance"], "bo")
     plt.xlabel("Total Number of Lyrics")
     plt.ylabel("Attendance")
