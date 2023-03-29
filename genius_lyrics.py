@@ -10,10 +10,6 @@ LIST_OF_ALBUM_KEYWORDS = ["Broadway", "Cast", "Recording"]
 # (the words themselves, not just the marks)
 PUNCTUATION_MARKS = "\"!#$%&'()*+,-./:;<=>?@\^_`{|}~"
 
-# List of random sequences that make it into lyrics that, if found, should be
-# removed
-REMOVE_FROM_LYRICS = ["\u200b", "translations", "embed"]
-
 
 def find_album(name):
     """
