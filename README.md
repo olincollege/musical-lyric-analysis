@@ -15,7 +15,7 @@ In order to run this code:
 ## Code Hierarchy
 * `broadway_data.py` contains code to download the CORGIS Broadway Dataset (or optionally, a different dataset in the same format) and complete various processing steps on it. This includes removing columns not being used for a particular implementation (controlled by the `COLUMNS_TO_REMOVE` list) and summing the performance data of all showings of a musical (as each musical is reported on a week-by-week basis). Data is writen to the `processed_broadway_data.csv` and `summed_broadway_data.csv` at their respective stages of the project.
 * `genius_lyrics.py` provides various functions for interfacing with Genius to acquire lyrics. It provides code to first match a musical with its recording album and then download each song from the musical's lyrics. Lyrics are written to a CSV file in the aforementioned lyrics folder to reduce the need to continually request them from the Genius API (which is a slow, slow process.)
-* `compile_data.py` implements the functions to match albums and download lyrics in `genius_lyrics` with the processed data from the Broadway dataset.
+* `compile_data.py` implements the functions to match albums and download lyrics in `genius_lyrics` with the processed data from the Broadway dataset. This file also includes various functions to create predefined plots based on compiled data.
 
 ## Reproducing Results
 `compile_data.py` provides an overview of how all of the various pieces of this project come together to analyze lyrical data, and we suggest you take a look at this if you're looking to do a similar analysis of lyrics.
