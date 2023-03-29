@@ -77,8 +77,8 @@ def get_broadway_data(
 def sum_data(load_filepath=PROCESSED_FILE_PATH, save_filepath=SUMMED_FILE_PATH):
     """
     Previous downloaded & filtered Broadway data is loaded from the created csv
-    file and the data is further processed to sum all unique musicals attendance
-    and number of performances together.
+    file and the data is further processed to sum all unique musicals 
+    attendance, number of performances, and length of run together.
 
     Args:
         filepath - string representing the path to the downloaded and filtered
