@@ -4,9 +4,6 @@ api_keys.py
 ## Ignore Jupyter Notebooks
 *.ipynb
 
-# Ignore created .csv data
-*.csv
-
 # VS code settings
 /.vscode
 pyproject.toml
